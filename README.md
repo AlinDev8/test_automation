@@ -75,7 +75,7 @@ test_automation
 1. Клонировать репозиторий:
 
 ```bash
-git clone https://github.com/OgBludo/SimpleUiTask.git
+git clone https://github.com/AlinDev8/test_automation
 cd SimpleUiTest
 ```
 
