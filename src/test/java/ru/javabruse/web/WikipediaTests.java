@@ -57,9 +57,7 @@ public class WikipediaTests {
         }
     }
 
-    /**
-     * Тест загрузки главной страницы
-     */
+  
     @Test(priority = 1, description = "Проверка загрузки главной страницы Википедии")
     public void testMainPageLoad() {
         logger.info("Тест: проверка загрузки главной страницы");
@@ -79,23 +77,19 @@ public class WikipediaTests {
         logger.info("Заголовок страницы: {}", pageTitle);
     }
 
-    /**
-     * Тест базового функционала поиска
-     */
     @Test(priority = 2, description = "Проверка базового функционала поиска")
     public void testBasicSearchFunctionality() {
         logger.info("Тест: базовый функционал поиска");
         String searchQuery = "Россия";
 
-        // Выполняем поиск
+  
         WikipediaPage.SearchResult result = wikipediaPage.searchArticle(searchQuery, false);
         logger.info("Результат поиска: {}", result);
 
-        // Получаем заголовок страницы
+     
         String heading = wikipediaPage.getPageTitle();
         logger.info("Заголовок найденной статьи: '{}'", heading);
 
-        // Проверки
         Assert.assertNotNull(heading, "Заголовок статьи не должен быть null");
         Assert.assertFalse(heading.isEmpty(), "Заголовок статьи не должен быть пустым");
         Assert.assertTrue(heading.contains(searchQuery),
@@ -103,19 +97,15 @@ public class WikipediaTests {
                         searchQuery, heading));
     }
 
-    /**
-     * Тест поиска с использованием подсказок
-     */
     @Test(priority = 3, description = "Проверка поиска с подсказками")
     public void testSearchWithSuggestions() {
         logger.info("Тест: поиск с использованием подсказок");
         String searchQuery = "Москва";
 
-        // Проверяем доступность подсказок
+
         boolean hasSuggestions = wikipediaPage.areSearchSuggestionsAvailable();
         logger.info("Подсказки поиска доступны: {}", hasSuggestions);
 
-        // Выполняем поиск с попыткой использования подсказок
         WikipediaPage.SearchResult result = wikipediaPage.searchArticle(searchQuery, hasSuggestions);
 
         if (result != null) {
@@ -123,7 +113,7 @@ public class WikipediaTests {
             Assert.assertFalse(result.getArticleTitle().isEmpty(),
                     "Заголовок статьи не должен быть пустым");
         } else {
-            // Если подсказок нет, выполняем обычный поиск
+    
             logger.info("Подсказки недоступны, выполняем обычный поиск");
             result = wikipediaPage.searchArticle(searchQuery, false);
             String heading = wikipediaPage.getPageTitle();
@@ -132,28 +122,23 @@ public class WikipediaTests {
         }
     }
 
-    /**
-     * Тест навигации на случайную страницу
-     */
+
     @Test(priority = 4, description = "Проверка перехода на случайную страницу")
     public void testRandomPageNavigation() {
         logger.info("Тест: переход на случайную страницу");
 
-        // Запоминаем текущий URL
         String originalUrl = driver.getCurrentUrl();
         logger.info("Исходный URL: {}", originalUrl);
 
-        // Переходим на случайную страницу
         wikipediaPage.goToRandomPage();
 
-        // Получаем новый URL и заголовок
+
         String newUrl = driver.getCurrentUrl();
         String randomPageTitle = wikipediaPage.getPageTitle();
 
         logger.info("Новый URL: {}", newUrl);
         logger.info("Заголовок случайной страницы: {}", randomPageTitle);
 
-        // Проверки
         Assert.assertNotEquals(newUrl, originalUrl,
                 "После перехода на случайную страницу URL должен измениться");
 
@@ -163,26 +148,21 @@ public class WikipediaTests {
         Assert.assertNotEquals(randomPageTitle, "Заглавная страница",
                 "Случайная страница не должна быть главной страницей");
 
-        // Проверяем, что это действительно статья
+ 
         Assert.assertTrue(newUrl.contains("/wiki/"),
                 "URL должен содержать путь к статье /wiki/");
     }
 
-    /**
-     * Тест доступности и интерактивности поля поиска
-     */
+  
     @Test(priority = 5, description = "Проверка доступности поля поиска")
     public void testSearchInputAvailability() {
         logger.info("Тест: проверка доступности поля поиска");
 
-        // Проверяем через наш Page Object
         Assert.assertTrue(wikipediaPage.isMainPageLoaded(),
                 "Главная страница должна быть загружена");
 
-        // Проверяем, что поле поиска доступно
-        // Этот метод нужно добавить в WikipediaPage или использовать альтернативу
         try {
-            // Альтернатива: проверяем, что можем выполнить поиск
+        
             wikipediaPage.searchArticle("тест", false);
             String resultTitle = wikipediaPage.getPageTitle();
             Assert.assertFalse(resultTitle.isEmpty(),
@@ -192,18 +172,12 @@ public class WikipediaTests {
             throw new AssertionError("Поле поиска недоступно для использования", e);
         }
     }
-
-    /**
-     * Тест наличия и содержания инфобокса в статьях
-     */
     @Test(priority = 6, description = "Проверка инфобоксов в статьях")
     public void testArticleInfobox() {
         logger.info("Тест: проверка инфобоксов в статьях");
 
-        // Ищем статью, которая обычно имеет инфобокс
         wikipediaPage.searchArticle("Альберт Эйнштейн", false);
 
-        // Проверяем наличие инфобокса
         boolean hasInfobox = wikipediaPage.hasInfobox();
         logger.info("Статья имеет инфобокс: {}", hasInfobox);
 
@@ -222,55 +196,41 @@ public class WikipediaTests {
         }
     }
 
-    /**
-     * Тест навигации по содержанию статьи
-     */
     @Test(priority = 7, description = "Проверка навигации по содержанию")
     public void testTableOfContentsNavigation() {
         logger.info("Тест: навигация по содержанию статьи");
 
-        // Ищем статью с содержанием
+  
         wikipediaPage.searchArticle("Программирование", false);
 
-        // Проверяем наличие содержания
+ 
         boolean hasToc = wikipediaPage.hasTableOfContents();
         logger.info("Статья имеет содержание: {}", hasToc);
 
         if (hasToc) {
-            // Прокручиваем до содержания
+            
             wikipediaPage.scrollToElement(org.openqa.selenium.By.id("toc"));
-
-            // Можно добавить клик по ссылке в содержании, если нужно
-            // wikipediaPage.clickTocLink("История");
 
             logger.info("Содержание доступно для навигации");
         } else {
             logger.info("Статья не имеет содержания, что может быть нормально для коротких статей");
         }
     }
-
-    /**
-     * Тест подсчета элементов в статье
-     */
     @Test(priority = 8, description = "Проверка подсчета элементов в статье")
     public void testArticleElementsCount() {
         logger.info("Тест: подсчет элементов в статье");
 
         wikipediaPage.searchArticle("Живопись", false);
 
-        // Считаем изображения
         int imageCount = wikipediaPage.countImages();
         logger.info("Количество изображений в статье: {}", imageCount);
 
-        // Считаем внешние ссылки
         int externalLinksCount = wikipediaPage.countExternalLinks();
         logger.info("Количество внешних ссылок в статье: {}", externalLinksCount);
 
-        // Получаем категории
         List<String> categories = wikipediaPage.getArticleCategories();
         logger.info("Категории статьи: {}", categories);
 
-        // Проверки
         Assert.assertTrue(imageCount >= 0, "Количество изображений не может быть отрицательным");
         Assert.assertTrue(externalLinksCount >= 0, "Количество внешних ссылок не может быть отрицательным");
 
@@ -280,9 +240,7 @@ public class WikipediaTests {
         }
     }
 
-    /**
-     * Тест переключения между вкладками статьи
-     */
+   
     @Test(priority = 9, description = "Проверка переключения вкладок статьи")
     public void testArticleTabsSwitching() {
         logger.info("Тест: переключение вкладок статьи");
@@ -291,17 +249,14 @@ public class WikipediaTests {
         String initialTitle = wikipediaPage.getPageTitle();
         logger.info("Исходная статья: {}", initialTitle);
 
-        // Переключаемся на вкладку "Обсуждение"
         wikipediaPage.switchToDiscussionTab();
         String discussionTitle = wikipediaPage.getPageTitle();
         logger.info("Вкладка 'Обсуждение': {}", discussionTitle);
 
-        // Проверяем, что это действительно страница обсуждения
         Assert.assertTrue(discussionTitle.contains("Обсуждение") ||
                         discussionTitle.contains("Talk:"),
                 "Заголовок должен указывать на страницу обсуждения");
 
-        // Возвращаемся на вкладку статьи
         driver.navigate().back();
         String returnedTitle = wikipediaPage.getPageTitle();
         logger.info("Возврат к статье: {}", returnedTitle);
@@ -311,9 +266,6 @@ public class WikipediaTests {
                 "После возврата должны быть на исходной статье");
     }
 
-    /**
-     * Параметризованный тест поиска с разными запросами
-     */
     @Test(priority = 10, description = "Параметризованный тест поиска",
             dataProvider = "searchTestData")
     public void testParameterizedSearch(String searchQuery, String expectedInTitle) {
@@ -333,43 +285,35 @@ public class WikipediaTests {
         }
     }
 
-    /**
-     * Комплексный тест работы с Википедией
-     */
+    
     @Test(priority = 11, description = "Комплексный тест работы с Википедией")
     public void testComplexWikipediaWorkflow() {
         logger.info("Комплексный тест работы с Википедией");
 
-        // Шаг 1: Проверка главной страницы
         Assert.assertTrue(wikipediaPage.isMainPageLoaded(),
                 "Шаг 1: Главная страница должна быть загружена");
 
-        // Шаг 2: Поиск первой статьи
         wikipediaPage.searchArticle("Физика", false);
         String firstArticle = wikipediaPage.getPageTitle();
         Assert.assertFalse(firstArticle.isEmpty(),
                 "Шаг 2: Первая статья должна быть найдена");
         logger.info("Первая статья: {}", firstArticle);
 
-        // Шаг 3: Проверка элементов статьи
         int firstArticleImages = wikipediaPage.countImages();
         logger.info("Изображений в первой статье: {}", firstArticleImages);
 
-        // Шаг 4: Переход на случайную страницу
         wikipediaPage.goToRandomPage();
         String randomArticle = wikipediaPage.getPageTitle();
         Assert.assertFalse(randomArticle.isEmpty(),
                 "Шаг 4: Случайная статья должна быть загружена");
         logger.info("Случайная статья: {}", randomArticle);
 
-        // Шаг 5: Поиск со случайной страницы
         wikipediaPage.searchArticle("Химия", false);
         String searchedArticle = wikipediaPage.getPageTitle();
         Assert.assertTrue(searchedArticle.contains("Химия"),
                 "Шаг 5: Должна быть найдена статья по химии");
         logger.info("Найденная статья: {}", searchedArticle);
 
-        // Шаг 6: Возврат на главную
         driver.get(BASE_URL);
         Assert.assertTrue(wikipediaPage.isMainPageLoaded(),
                 "Шаг 6: Должны вернуться на главную страницу");
@@ -377,9 +321,6 @@ public class WikipediaTests {
         logger.info("Комплексный тест выполнен успешно");
     }
 
-    /**
-     * Провайдер данных для параметризованных тестов
-     */
     @DataProvider(name = "searchTestData")
     public Object[][] provideSearchTestData() {
         return new Object[][] {
@@ -391,21 +332,14 @@ public class WikipediaTests {
         };
     }
 
-    /**
-     * Проверяет, упал ли тест
-     */
     private boolean isTestFailed() {
-        // В реальном проекте можно использовать TestNG listeners
-        // для определения статуса теста
+  
         return false;
     }
 
-    /**
-     * Создает скриншот
-     */
     private void takeScreenshot(String testName) {
         try {
-            // В реальном проекте можно сохранять скриншоты в файл
+         
             logger.info("Создан скриншот для теста: {}", testName);
         } catch (Exception e) {
             logger.warn("Не удалось создать скриншот: {}", e.getMessage());
