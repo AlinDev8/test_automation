@@ -76,7 +76,7 @@ test_automation
 
 ```bash
 git clone https://github.com/AlinDev8/test_automation
-cd SimpleUiTest
+cd test_automation
 ```
 
 2. Запустить web-тесты командой Maven (Selenium):
